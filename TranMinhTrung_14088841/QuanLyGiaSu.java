@@ -30,14 +30,25 @@ import javax.swing.table.DefaultTableModel;
 
 import connectdatabase.ConnectDatabase;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JScrollPane;
+
+import java.sql.*;
+
+import javax.swing.*;
+
+import net.proteanit.sql.DbUtils;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 public class QuanLyGiaSu extends JFrame {
 	Connection connection=null;
 	private PreparedStatement stmt ;  
 	private ResultSet rs ; 
 	private JPanel contentPane;
-	private JTextField txtTaiKhoan;
-	private JPasswordField txtMatKhau;
 	private JTable tableGaSu;
+	private JTextField txtSearch;
 
 	/**
 	 * Launch the application.
@@ -58,47 +69,13 @@ public class QuanLyGiaSu extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public void showgiasu(){
-	Vector cols=new Vector();
-	cols.addElement("MaGiaSu");
-	cols.addElement("HoGiaSu");
-	cols.addElement("TenGiaSu");
-	cols.addElement("GioiTinh");
-	cols.addElement("NgaySinh");
-	cols.addElement("NoiSinh");
-	cols.addElement("DiaChi");
-	cols.addElement("SoDienThoai");
-	cols.addElement("Email");
-	Vector data=new Vector();
-	String SQL="SELECT 8 FROM GiaSu";
-	try{
-		PreparedStatement pst=connection.prepareStatement(SQL);
-		ResultSet rs=pst.executeQuery();
-		while (rs.next()) {  
-			Vector giasu=new Vector();
-			giasu.addElement(rs.getString("MaGiaSu"));
-			giasu.addElement(rs.getString("HoGiaSu"));
-			giasu.addElement(rs.getString("TenGiaSu"));
-			giasu.addElement(rs.getString("GioiTinh"));
-			giasu.addElement(rs.getString("NgaySinh"));
-			giasu.addElement(rs.getString("NoiSinh"));
-			giasu.addElement(rs.getString("DiaChi"));
-			giasu.addElement(rs.getString("SoDienThoai"));
-			giasu.addElement(rs.getString("Email"));
-			data.add(giasu);
-		}
-		
-	}catch(Exception e){
-		
-	}
-	tableGaSu.setModel(new DefaultTableModel(null, cols));
-	}
+	
 	public QuanLyGiaSu() {
-		showgiasu();
-		connection = ConnectDatabase.getconnection();
 		
+		connection = ConnectDatabase.getconnection();
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 805, 572);
+		setBounds(100, 100, 853, 582);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -107,72 +84,99 @@ public class QuanLyGiaSu extends JFrame {
 		JLabel lblNewLabel = new JLabel("ADMIN");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setForeground(Color.RED);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNewLabel.setBounds(261, 11, 192, 53);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
+		lblNewLabel.setBounds(261, 11, 248, 53);
 		contentPane.add(lblNewLabel);
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(240, 240, 240));
-		panel.setBounds(0, 54, 741, 468);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setFont(new Font("Tahoma", Font.BOLD, 18));
-		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Information", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(0, 0, 367, 180);
-		panel.add(panel_1);
-		panel_1.setLayout(null);
-		
-		JLabel lblTaiKhoan = new JLabel("Tài Khoản:");
-		lblTaiKhoan.setBounds(10, 37, 104, 38);
-		panel_1.add(lblTaiKhoan);
-		lblTaiKhoan.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTaiKhoan.setFont(new Font("Tahoma", Font.BOLD, 18));
-		
-		JLabel lblMatKhau = new JLabel("Mật Khẩu:");
-		lblMatKhau.setBounds(10, 97, 104, 38);
-		panel_1.add(lblMatKhau);
-		lblMatKhau.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMatKhau.setFont(new Font("Tahoma", Font.BOLD, 18));
-		
-		txtTaiKhoan = new JTextField();
-		txtTaiKhoan.setBounds(124, 46, 233, 27);
-		panel_1.add(txtTaiKhoan);
-		txtTaiKhoan.setColumns(10);
-		
-		txtMatKhau = new JPasswordField();
-		txtMatKhau.setBounds(124, 106, 233, 26);
-		panel_1.add(txtMatKhau);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(null, "Operation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setBounds(374, 0, 361, 180);
-		panel.add(panel_2);
-		panel_2.setLayout(null);
-		
-		JButton btnngNhp = new JButton("Login");
-		btnngNhp.setBounds(21, 36, 192, 38);
-		panel_2.add(btnngNhp);
-		btnngNhp.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Register-icon.png"));
-		btnngNhp.setForeground(Color.GREEN);
-		btnngNhp.setFont(new Font("Tahoma", Font.BOLD, 20));
+		JButton btnAdd = new JButton("Add");
+		btnAdd.setBounds(10, 473, 181, 38);
+		contentPane.add(btnAdd);
+		btnAdd.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Actions-list-add-icon.png"));
+		btnAdd.setForeground(Color.GREEN);
+		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 20));
 		
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(21, 97, 192, 38);
-		panel_2.add(btnCancel);
-		btnCancel.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Close-2-icon (1).png"));
+		btnCancel.setBounds(635, 473, 192, 38);
+		contentPane.add(btnCancel);
+		btnCancel.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Actions-dialog-cancel-icon.png"));
 		btnCancel.setForeground(Color.GREEN);
 		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 20));
 		
-		JButton btnXemDanhSch = new JButton("Xem danh sách Gia sư");
-		btnXemDanhSch.setBounds(476, 419, 255, 38);
-		panel.add(btnXemDanhSch);
+		txtSearch = new JTextField();
+		txtSearch.setBounds(10, 75, 367, 30);
+		contentPane.add(txtSearch);
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				try {
+					String query="SELECT * FROM GiaSu WHERE TenGiaSu=? ";
+					PreparedStatement pst=connection.prepareStatement(query);
+					ResultSet rs=pst.executeQuery();
+					pst.setString(2, txtSearch.getText());
+					tableGaSu.setModel(DbUtils.resultSetToTableModel(rs));
+				//	while (rs.next()) {
+				//	}
+					pst.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		txtSearch.setColumns(10);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 116, 817, 333);
+		contentPane.add(scrollPane);
+		
+		tableGaSu = new JTable();
+		scrollPane.setViewportView(tableGaSu);
+		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.setBounds(387, 72, 161, 33);
+		contentPane.add(btnSearch);
+		btnSearch.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Zoom-icon.png"));
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnSearch.setForeground(Color.GREEN);
+		btnSearch.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		JButton btnXemDanhSch = new JButton("DS Gia sư");
+		btnXemDanhSch.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Actions-view-calendar-icon.png"));
+		btnXemDanhSch.setBounds(558, 71, 192, 34);
+		contentPane.add(btnXemDanhSch);
+		btnXemDanhSch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String query="SELECT * FROM GiaSu";
+					PreparedStatement pst=connection.prepareStatement(query);
+					ResultSet rs=pst.executeQuery();
+					tableGaSu.setModel(DbUtils.resultSetToTableModel(rs));
+					//while (rs.next()) {
+				//	}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		btnXemDanhSch.setForeground(Color.GREEN);
 		btnXemDanhSch.setFont(new Font("Tahoma", Font.BOLD, 20));
 		
-		tableGaSu = new JTable();
-		tableGaSu.setBounds(0, 225, 735, 180);
-		panel.add(tableGaSu);
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Close-2-icon (1).png"));
+		btnDelete.setForeground(Color.GREEN);
+		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 20));
+		btnDelete.setBounds(211, 473, 192, 38);
+		contentPane.add(btnDelete);
+		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.setIcon(new ImageIcon("E:\\webservice\\java\\TrungTamGiaSu\\img\\Text-Edit-icon.png"));
+		btnEdit.setForeground(Color.GREEN);
+		btnEdit.setFont(new Font("Tahoma", Font.BOLD, 20));
+		btnEdit.setBounds(421, 473, 192, 38);
+		contentPane.add(btnEdit);
 	}
 }
