@@ -111,8 +111,8 @@ public class QuanLyGiaSu extends JFrame {
 				try {
 					String query="SELECT * FROM GiaSu WHERE TenGiaSu=? ";
 					PreparedStatement pst=connection.prepareStatement(query);
+					pst.setString(1, txtSearch.getText());
 					ResultSet rs=pst.executeQuery();
-					pst.setString(2, txtSearch.getText());
 					tableGaSu.setModel(DbUtils.resultSetToTableModel(rs));
 				//	while (rs.next()) {
 				//	}
@@ -154,6 +154,8 @@ public class QuanLyGiaSu extends JFrame {
 					PreparedStatement pst=connection.prepareStatement(query);
 					ResultSet rs=pst.executeQuery();
 					tableGaSu.setModel(DbUtils.resultSetToTableModel(rs));
+					pst.close();
+					rs.close();
 					//while (rs.next()) {
 				//	}
 					
