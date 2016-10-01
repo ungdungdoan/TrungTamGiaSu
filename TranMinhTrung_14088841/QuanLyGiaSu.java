@@ -98,7 +98,7 @@ public class QuanLyGiaSu extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setForeground(Color.RED);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblNewLabel.setBounds(261, 11, 248, 53);
+		lblNewLabel.setBounds(350, 11, 248, 53);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnAdd = new JButton("Add");
@@ -152,7 +152,7 @@ public class QuanLyGiaSu extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				try {
-					String query="SELECT * FROM GiaSu WHERE TenGiaSu=? ";
+					String query="SELECT * FROM GiaSu WHERE TenGiaSu like ? ";
 					PreparedStatement pst=connection.prepareStatement(query);
 					pst.setString(1, txtSearch.getText());
 					ResultSet rs=pst.executeQuery();
