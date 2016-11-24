@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Use this file to deploy some handlers/chains and services      --><!-- Two ways to do this:                                           --><!--   java org.apache.axis.client.AdminClient deploy.wsdd          --><!--      after the axis server is running                          --><!-- or                                                             --><!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   --><!--      from the same directory that the Axis engine runs         --><deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from DanhSachGiaSuService WSDL service -->
+
+  <service name="DanhSachGiaSu" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://giasu_implement"/>
+      <parameter name="wsdlServiceElement" value="DanhSachGiaSuService"/>
+      <parameter name="schemaQualified" value="http://giasu_implement"/>
+      <parameter name="wsdlServicePort" value="DanhSachGiaSu"/>
+      <parameter name="className" value="giasu_implement.DanhSachGiaSu"/>
+      <parameter name="wsdlPortType" value="DanhSachGiaSu"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation xmlns:operNS="http://giasu_implement" xmlns:retNS="http://giasu_implement" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getDSGS" qname="operNS:getDSGS" returnQName="retNS:getDSGSReturn" returnType="rtns:string" soapAction="">
+      </operation>
+      <parameter name="allowedMethods" value="getDSGS"/>
+
+  </service>
+</deployment>
